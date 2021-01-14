@@ -1,5 +1,5 @@
 var express = require('express');
-var { graphqlHTTP } = require('express-graphql');
+var { graphqlHTTP: express_graphql } = require('express-graphql');
 var { buildSchema } = require('graphql');
 
 var moviesData = [
@@ -26,7 +26,7 @@ var moviesData = [
 // Construct a schema, using GraphQL schema language
 var schema = buildSchema(`
   type Query {
-    movie(id: Int!): String
+    movie(id: Int!): Movie
   },
 
   type Movie {
@@ -35,11 +35,10 @@ var schema = buildSchema(`
     description: String
     img: String
   }
-
 `);
  
 var getMovie = function(args) { 
-    return "getMovie execute!"
+    //return "getMovie execute!"
     var id = args.id;
     return moviesData.filter(movie => {
         return movie.id == id;
@@ -61,7 +60,7 @@ var root = {
 };
  
 var app = express();
-app.use('/graphql', graphqlHTTP({
+app.use('/graphql', express_graphql({
   schema: schema,
   rootValue: root,
   graphiql: true,
