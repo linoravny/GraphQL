@@ -6,7 +6,8 @@ var { buildSchema } = require('graphql');
 var schema = buildSchema(`
     type Query {
       movie(id: Int!): Movie,
-      movies(name: String): [Movie]
+      movies(name: String): [Movie],
+      addMovie(id: Int!): [Movie]
     },
     type Movie {
       id: Int
@@ -65,10 +66,23 @@ var getMovies = function(args) {
     }
 }
 
+var addMovie = function(args) { 
+  var id = args.id;
+  let item = {
+    id: id,
+    name: 'added movie',
+    description: 'added movie desc',
+    url: 'some url'
+  }
+  moviesData.push(item);
+  return moviesData;
+}
+
 
 var root = {
   movie: getMovie,
-  movies: getMovies
+  movies: getMovies,
+  addMovie: addMovie
 };
 
 var app = express();
@@ -105,5 +119,17 @@ query getMoviesByName($movieName: String) {
 VARIABLES:
 {
    "movieName": "The Shawshank Redemption"
+}
+========
+3. add movie
+query addMovie($movieID: Int!) {
+    addMovie(id: $movieID) {
+        id,
+    		name
+    }
+}
+VARIABLES:
+{
+  "movieID": 1
 }
 */
